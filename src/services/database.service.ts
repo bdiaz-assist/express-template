@@ -1,15 +1,15 @@
 import oracledb from 'oracledb'
-import { db_conn } from '../database'
+import { dbQueryConn, dbDataConn } from '../database'
+import { QGetQueryByName } from '../config/database.config'
 
 
-export async function getSQLScript(id: Number){
-  //Consulta para obtener SCRIPT CONSULTA en BD - Tabla Parametros USRHUBD.SQL_CRM
-  const sqlScript = await db_conn.execute(
-    `SELECT SQL FROM USRHUBD.SQL_CRM
-    WHERE ID = ${id}`,
+export async function getSQLScript(name: String){
+  // Consulta para obtener SCRIPT CONSULTA en BD - Tabla Parametros USRHUBD.SQL_CRM
+  const sqlScript = await dbQueryConn.execute(
+    `${QGetQueryByName} '${name}'`,
     [],
-    { fetchInfo: { "SQL": { type: oracledb.STRING } } }
-  )
+    { fetchInfo: { "SENTENCESQL": { type: oracledb.STRING } } }
+  );
   return sqlScript.rows[0][0]
 } 
 
